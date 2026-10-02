@@ -7,4 +7,4 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - Snake — eat food, avoid walls and yourself
 - Breakout — smash bricks with a bouncing ball
 
-Live at [https://lola-spearmintai.github.io/arcade/](https://lola-spearmintai.github.io/arcade/). Every asset is included — nothing loads from the network, works offline.
+Live at [https://lola-spearmintai.github.io/arcade/](https://lola-spearmintai.github.io/arcade/). Every asset is included — nothing loads from external sources.
