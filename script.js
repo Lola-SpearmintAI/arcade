@@ -20,6 +20,13 @@ const games = [
     controls: 'MOUSE/ARROWS + SPACE',
     url: 'breakout/index.html'
   },
+  {
+    id: 'asteroids',
+    name: 'Asteroid Dodge',
+    description: 'Dodge asteroids in space. ← → rotate, ↑ thrust, SPACE shoot. Survive.',
+    controls: '← → ↑ SPACE',
+    url: 'asteroids/index.html'
+  },
 ];
 
 function renderGames() {

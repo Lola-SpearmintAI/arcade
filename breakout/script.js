@@ -105,7 +105,7 @@ function drawHUD() {
   ctx.fillStyle = COLORS.text;
   ctx.font = 'bold 18px Courier New';
   ctx.textAlign = 'left';
-  ctx.fillText('Score: ' + score, 12, 28);
+  ctx.fillText('Score: ' + score, W / 2, 28);
 
   ctx.textAlign = 'right';
   ctx.fillText('Lives: ' + lives, W - 12, 28);

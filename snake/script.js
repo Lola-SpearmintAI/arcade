@@ -104,7 +104,7 @@ function drawScore() {
   ctx.fillStyle = COLORS.accent;
   ctx.font = 'bold 20px Courier New';
   ctx.textAlign = 'left';
-  ctx.fillText('Score: ' + score, 12, 28);
+  ctx.fillText('Score: ' + score, W / 2, 28);
 }
 
 function drawStartScreen() {
