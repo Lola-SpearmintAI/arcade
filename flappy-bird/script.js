@@ -9,17 +9,20 @@ function resize() {
   canvas.height = H;
 }
 resize();
+recalc();
 window.addEventListener('resize', resize);
 
-const GRAVITY = 0.35;
-const JUMP = -9.5;
-const PIPE_SPEED = 12;
-const PIPE_WIDTH = 70;
-const PIPE_GAP = 280;
-const PIPE_SPACING = 500;
-const BIRD_SIZE = 28;
-const GROUND_H = 50;
-const PLAY_H = H - GROUND_H;
+var GRAVITY = 0.35;
+var JUMP = -9.5;
+var PIPE_SPEED = 12;
+var PIPE_WIDTH = 70;
+var PIPE_GAP = 280;
+var PIPE_SPACING = 500;
+var BIRD_SIZE = 28;
+var GROUND_H = 50;
+var PLAY_H = H - GROUND_H;
+
+function recalc() { PLAY_H = H - GROUND_H; }
 
 let bird, pipes, score, state, frameCount, groundX;
 let speedLines = [];
@@ -275,4 +278,52 @@ function loop() {
   draw();
   requestAnimationFrame(loop);
 }
+// Settings panel
+(function() {
+  const panel = document.createElement('div');
+  panel.style.cssText = 'position:fixed;top:10px;right:10px;background:rgba(255,255,255,0.92);padding:12px 14px;border-radius:8px;border:1px solid #dbeafe;font-family:Courier New,monospace;box-shadow:0 2px 8px rgba(37,99,235,0.15);z-index:100;min-width:180px;';
+  const title = document.createElement('div');
+  title.textContent = 'Game Settings';
+  title.style.cssText = 'font-weight:700;color:#2563eb;font-size:0.9rem;margin-bottom:10px;border-bottom:1px solid #dbeafe;padding-bottom:6px;';
+  panel.appendChild(title);
+
+  const params = [
+    {label:'Gravity', key:'GRAVITY', min:0.1, max:1.0, step:0.05},
+    {label:'Jump Force', key:'JUMP', min:-15, max:0, step:0.5},
+    {label:'Pipe Speed', key:'PIPE_SPEED', min:5, max:25, step:0.5},
+    {label:'Pipe Width', key:'PIPE_WIDTH', min:30, max:120, step:5},
+    {label:'Pipe Gap', key:'PIPE_GAP', min:150, max:400, step:10},
+    {label:'Pipe Spacing', key:'PIPE_SPACING', min:200, max:800, step:20},
+    {label:'Bird Size', key:'BIRD_SIZE', min:15, max:50, step:1},
+    {label:'Ground Height', key:'GROUND_H', min:20, max:100, step:5},
+  ];
+
+  params.forEach(function(p) {
+    const row = document.createElement('div');
+    row.style.cssText = 'margin-bottom:6px;display:flex;align-items:center;gap:6px;';
+    const label = document.createElement('label');
+    label.textContent = p.label;
+    label.style.cssText = 'font-size:0.75rem;color:#1e293b;width:75px;flex-shrink:0;';
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = p.min; slider.max = p.max; slider.step = p.step;
+    slider.value = window[p.key];
+    slider.style.cssText = 'flex:1;height:4px;accent-color:#2563eb;';
+    const val = document.createElement('span');
+    val.textContent = window[p.key];
+    val.style.cssText = 'font-size:0.75rem;color:#2563eb;font-weight:700;width:30px;text-align:right;flex-shrink:0;';
+    slider.addEventListener('input', function() {
+      window[p.key] = parseFloat(slider.value);
+      val.textContent = parseFloat(slider.value);
+      if (p.key === 'GROUND_H') recalc();
+    });
+    row.appendChild(label);
+    row.appendChild(slider);
+    row.appendChild(val);
+    panel.appendChild(row);
+  });
+
+  document.body.appendChild(panel);
+})();
+
 loop();
