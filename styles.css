@@ -111,6 +111,17 @@ footer {
   text-transform: uppercase;
 }
 
+.footer-links a {
+  color: #2563eb;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  font-weight: 700;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
 .loading {
   display: inline-block;
   width: 20px;
