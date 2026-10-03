@@ -41,6 +41,13 @@ const games = [
     controls: 'WASD / ARROWS',
     url: '2048/index.html'
   },
+  {
+    id: 'space-invaders',
+    name: 'Space Invaders',
+    description: 'Defend Earth from waves of invaders. Move and shoot to clear them all.',
+    controls: 'WASD / ARROWS + SPACE',
+    url: 'space-invaders/index.html'
+  },
 ];
 
 function renderGames() {
