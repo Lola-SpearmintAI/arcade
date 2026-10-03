@@ -27,6 +27,13 @@ const games = [
     controls: 'WASD / ARROWS + SPACE + SHIFT',
     url: 'asteroids/index.html'
   },
+  {
+    id: 'pac-man',
+    name: 'Pac-Man',
+    description: 'Chomp pellets, avoid ghosts, eat power pellets to turn the tables.',
+    controls: 'ARROWS / WASD + SPACE',
+    url: 'pac-man/index.html'
+  },
 ];
 
 function renderGames() {

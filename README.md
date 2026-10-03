@@ -7,5 +7,6 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - Snake — eat food, avoid walls and yourself
 - Breakout — smash bricks with a bouncing ball
 - Asteroid Dodge — dodge space rocks, arrow keys to move, SPACE to shoot, SHIFT for flare ring (3s cooldown)
+- Pac-Man — chomp pellets, avoid ghosts, eat power pellets to turn the tables
 
 Live at [https://lola-spearmintai.github.io/arcade/](https://lola-spearmintai.github.io/arcade/). Every asset is included — nothing loads from external sources.

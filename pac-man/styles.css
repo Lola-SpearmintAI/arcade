@@ -1,0 +1,5 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0d1b3e; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: Courier New, monospace; overflow: hidden; }
+canvas { display: block; }
+.home-btn { position: fixed; top: 10px; left: 10px; background: rgba(255,255,255,0.9); color: #0d1b3e; padding: 6px 14px; border-radius: 20px; text-decoration: none; font-family: Courier New, monospace; font-size: 13px; font-weight: bold; z-index: 10; border: 1px solid #2563eb; }
+.home-btn:hover { background: #2563eb; color: #fff; }
