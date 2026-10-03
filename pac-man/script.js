@@ -40,7 +40,7 @@ const POWER_PELLET_SCORE = 50;
 const GHOST_SCORE = 200;
 const POWER_PELLET_DURATION = 420; // 7 seconds at 60fps
 
-let maze, pac, ghosts, pellets, score, lives, state, frameCount, powerPelletTimer, lastPelletCount;
+let maze, pac, ghosts, pellets, score, lives, state, frameCount, powerPelletTimer, lastPelletCount, deadTimer;
 let startDelay = 0;
 
 function init() {
@@ -59,6 +59,7 @@ function init() {
   lives = 3;
   state = 'start';
   frameCount = 0;
+  deadTimer = 0;
   powerPelletTimer = 0;
   startDelay = 0;
   buildPellets();
@@ -103,6 +104,7 @@ function resetLevel() {
   });
   buildPellets();
   powerPelletTimer = 0;
+  deadTimer = 0;
   state = 'playing';
 }
 
@@ -243,7 +245,10 @@ function update() {
   }
 
   if (state === 'dead') {
-    if (frameCount % 30 === 0) {
+    deadTimer++;
+    const secsLeft = 2 - Math.floor(deadTimer / 60);
+    if (deadTimer >= 120) {
+      deadTimer = 0;
       lives--;
       if (lives <= 0) {
         return;
@@ -255,8 +260,8 @@ function update() {
 
   if (state === 'win') return;
 
-  if (frameCount % 5 === 0) movePac();
-  if (frameCount % 7 === 0) {
+  if (frameCount % 9 === 0) movePac();
+  if (frameCount % 11 === 0) {
     for (const g of ghosts) moveGhost(g);
   }
 
@@ -390,7 +395,7 @@ function draw() {
     ctx.fillText('Score: ' + score, W / 2, H * 0.45);
     ctx.fillStyle = '#fff';
     ctx.font = '14px Courier New';
-    ctx.fillText('Resuming in ' + Math.ceil((30 - (frameCount % 30)) / 60) + 's...', W / 2, H * 0.55);
+    ctx.fillText('Resuming in ' + (2 - Math.floor(deadTimer / 60)) + 's...', W / 2, H * 0.55);
     return;
   }
 
