@@ -148,7 +148,7 @@ function fireFlares() {
 function destroyAsteroid(i, source) {
   const a = asteroids[i];
   if (source !== 'bullet') score += a.points;
-  spawnParticles(a.x, a.y, 10, '#fff', 1);
+  spawnParticles(a.x, a.y, 10, '#94a3b8', 1);
   if (a.size === 'large') {
     spawnAsteroid(a.x, a.y, 'medium');
     spawnAsteroid(a.x, a.y, 'medium');
@@ -294,7 +294,7 @@ function update() {
 function drawShip(x, y) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#2563eb';
   ctx.beginPath();
   ctx.moveTo(0, -SHIP_RADIUS);
   ctx.lineTo(-SHIP_RADIUS * 0.7, SHIP_RADIUS * 0.5);
@@ -314,27 +314,27 @@ function drawShip(x, y) {
 function drawFlare(x, y, life) {
   const alpha = life / FLARE_LIFE;
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = '#60a5fa';
+  ctx.fillStyle = '#2563eb';
   ctx.beginPath();
-  ctx.arc(x, y, 4, 0, Math.PI * 2);
-  ctx.fill();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
   ctx.globalAlpha = alpha * 0.4;
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#a5b4fc';
   ctx.beginPath();
-  ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalAlpha = 1;
 }
 
 function draw() {
-  ctx.fillStyle = '#0d1b3e';
+  ctx.fillStyle = '#f0f4f8';
   ctx.fillRect(0, 0, W, H);
 
   for (const s of stars) {
     const sx = s.x % W;
     const sy = s.y % H;
     ctx.globalAlpha = 0.3 + s.bright * 0.7;
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#1e293b';
     ctx.fillRect(sx, sy, s.s, s.s);
   }
   ctx.globalAlpha = 1;
@@ -347,14 +347,14 @@ function draw() {
   ctx.globalAlpha = 1;
 
   if (state === 'start') {
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#1e293b';
     ctx.font = 'bold 48px Courier New';
     ctx.textAlign = 'center';
     ctx.fillText('ASTEROID DODGE', W / 2, H * 0.35);
     ctx.font = '20px Courier New';
-    ctx.fillStyle = '#60a5fa';
+    ctx.fillStyle = '#2563eb';
     ctx.fillText('SPACE to start', W / 2, H * 0.45);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#1e293b';
     ctx.font = '14px Courier New';
     ctx.fillText('← → ↑ ↓ or WASD to move  SPACE to shoot  SHIFT for flares', W / 2, H * 0.55);
     return;
@@ -365,7 +365,7 @@ function draw() {
       drawShip(ship.x, ship.y);
     }
 
-    ctx.fillStyle = '#60a5fa';
+    ctx.fillStyle = '#2563eb';
     for (const b of bullets) {
       ctx.beginPath();
       ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
@@ -398,7 +398,7 @@ function draw() {
     }
 
     // HUD
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#1e293b';
     ctx.font = 'bold 18px Courier New';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
