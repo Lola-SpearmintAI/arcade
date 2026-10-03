@@ -34,6 +34,13 @@ const games = [
     controls: 'ARROWS / WASD + SPACE',
     url: 'pac-man/index.html'
   },
+  {
+    id: '2048',
+    name: '2048',
+    description: 'Slide tiles, merge numbers, reach 2048.',
+    controls: 'WASD / ARROWS',
+    url: '2048/index.html'
+  },
 ];
 
 function renderGames() {

@@ -33,12 +33,13 @@ const MAZE_DATA = [
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
-const GHOST_COLORS = ['#ff0000', '#ffb8ff', '#00ffff'];
-const GHOST_NAMES = ['blinky', 'pinky', 'clyde'];
+const GHOST_COLORS = ['#ff0000', '#ffb8ff', '#00ffff', '#ffb852'];
+const GHOST_NAMES = ['blinky', 'pinky', 'inky', 'clyde'];
 const PELLET_SCORE = 10;
 const POWER_PELLET_SCORE = 50;
 const GHOST_SCORE = 200;
 const POWER_PELLET_DURATION = 420; // 7 seconds at 60fps
+const GHOST_RETURN_TIME = 90; // 1.5 seconds at box
 
 let maze, pac, ghosts, pellets, score, lives, state, frameCount, powerPelletTimer, lastPelletCount, deadTimer;
 let startDelay = 0;
@@ -47,13 +48,14 @@ function init() {
   maze = MAZE_DATA.map(row => [...row]);
   pac = { x: 9, y: 15, dir: { x: 0, y: 0 }, nextDir: { x: 0, y: 0 }, mouth: 0 };
   ghosts = GHOST_COLORS.map((color, i) => ({
-    x: i === 0 ? 9 : (i === 1 ? 8 : 10),
-    y: 9,
+    x: 9, y: 9,
     dir: { x: 0, y: 0 },
     color: color,
     name: GHOST_NAMES[i],
+    index: i,
     mode: 'chase',
-    home: i === 0 ? { x: 1, y: 1 } : i === 1 ? { x: 17, y: 1 } : { x: 1, y: 19 },
+    home: i === 0 ? { x: 1, y: 1 } : i === 1 ? { x: 17, y: 1 } : i === 2 ? { x: 1, y: 19 } : { x: 17, y: 19 },
+    returnTimer: 0,
   }));
   score = 0;
   lives = 3;
@@ -96,11 +98,12 @@ function canMove(px, py, dx, dy) {
 function resetLevel() {
   maze = MAZE_DATA.map(row => [...row]);
   pac = { x: 9, y: 15, dir: { x: 0, y: 0 }, nextDir: { x: 0, y: 0 }, mouth: 0 };
-  ghosts.forEach((g, i) => {
-    g.x = i === 0 ? 9 : (i === 1 ? 8 : 10);
+  ghosts.forEach((g) => {
+    g.x = 9;
     g.y = 9;
     g.dir = { x: 0, y: 0 };
     g.mode = 'chase';
+    g.returnTimer = 0;
   });
   buildPellets();
   powerPelletTimer = 0;
@@ -154,12 +157,18 @@ function movePac() {
   if (countPellets() === 0) {
     state = 'win';
   }
-
-  if (powerPelletTimer > 0) powerPelletTimer--;
 }
 
 function moveGhost(g) {
   if (state !== 'playing') return;
+
+  if (g.mode === 'returning') {
+    g.returnTimer--;
+    if (g.returnTimer <= 0) {
+      g.mode = 'chase';
+    }
+    return;
+  }
 
   const possibleDirs = [
     { x: 0, y: -1 }, { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: 1 },
@@ -170,23 +179,42 @@ function moveGhost(g) {
   const pacX = pac.x;
   const pacY = pac.y;
 
+  let targetX, targetY;
+  if (powerPelletTimer > 0) {
+    targetX = g.home.x;
+    targetY = g.home.y;
+  } else if (g.mode === 'scatter') {
+    targetX = g.home.x;
+    targetY = g.home.y;
+  } else {
+    switch (g.index) {
+      case 0:
+        targetX = pacX; targetY = pacY;
+        break;
+      case 1:
+        targetX = pacX + pac.dir.x * 4; targetY = pacY + pac.dir.y * 4;
+        break;
+      case 2:
+        targetX = pacX + (pacX - ghosts[0].x); targetY = pacY + (pacY - ghosts[0].y);
+        break;
+      case 3:
+        const distToPac = (pacX - g.x) * (pacX - g.x) + (pacY - g.y) * (pacY - g.y);
+        if (distToPac < CELL * CELL * 16) {
+          targetX = g.home.x; targetY = g.home.y;
+        } else {
+          targetX = pacX; targetY = pacY;
+        }
+        break;
+      default:
+        targetX = pacX; targetY = pacY;
+    }
+  }
+
   for (const d of possibleDirs) {
     const nx = g.x + d.x;
     const ny = g.y + d.y;
     if (isWall(nx, ny)) continue;
     if (d.x === -g.dir.x && d.y === -g.dir.y) continue;
-
-    let targetX, targetY;
-    if (powerPelletTimer > 0) {
-      targetX = g.home.x;
-      targetY = g.home.y;
-    } else if (g.mode === 'scatter') {
-      targetX = g.home.x;
-      targetY = g.home.y;
-    } else {
-      targetX = pacX;
-      targetY = pacY;
-    }
 
     const dist = (nx - targetX) * (nx - targetX) + (ny - targetY) * (ny - targetY);
     if (dist < bestDist) {
@@ -225,7 +253,8 @@ function checkCollisions() {
         g.x = 9;
         g.y = 9;
         g.dir = { x: 0, y: 0 };
-        g.mode = 'chase';
+        g.mode = 'returning';
+        g.returnTimer = GHOST_RETURN_TIME;
       } else {
         state = 'dead';
       }
@@ -235,6 +264,7 @@ function checkCollisions() {
 
 function update() {
   frameCount++;
+  if (powerPelletTimer > 0) powerPelletTimer--;
 
   if (state === 'start') {
     startDelay++;
@@ -327,7 +357,8 @@ function drawGhost(g) {
   const px = g.x * CELL + CELL / 2;
   const py = g.y * CELL + CELL / 2;
   const r = CELL * 0.42;
-  const color = powerPelletTimer > 0 ? '#0066ff' : g.color;
+  const flashing = powerPelletTimer > 0 && powerPelletTimer < 120 && Math.floor(frameCount / 10) % 2 === 0;
+  const color = flashing ? '#ffffff' : (powerPelletTimer > 0 ? '#0066ff' : g.color);
 
   ctx.fillStyle = color;
   ctx.beginPath();
