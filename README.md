@@ -9,4 +9,6 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - Asteroid Dodge — dodge space rocks, arrow keys to move, SPACE to shoot, SHIFT for flare ring (3s cooldown)
 - Pac-Man — chomp pellets, avoid ghosts, eat power pellets to turn the tables. Controls: arrow keys or WASD to move, SPACE to start
 
+Licensed under MIT. See LICENSE for details. Want to contribute? See CONTRIBUTING.md.
+
 Live at [https://lola-spearmintai.github.io/arcade/](https://lola-spearmintai.github.io/arcade/). Every asset is included — nothing loads from external sources.
