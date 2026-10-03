@@ -219,8 +219,9 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowUp' || e.code === 'KeyW') rotatePiece();
   if (e.code === 'Space') hardDrop();
   if (e.code === 'KeyQ' && gameState === 'playing') {
-    paused = !paused;
-    pauseTimer = 0;
+    if (!paused) { paused = true; pauseTimer = 0; }
+    else if (pauseTimer === 0) { pauseTimer = 1; }
+    else { paused = false; pauseTimer = 0; }
   }
 });
 
@@ -237,11 +238,7 @@ function update(delta) {
     return;
   }
   if (paused) {
-    pauseTimer++;
-    if (pauseTimer >= PAUSE_DURATION) {
-      paused = false;
-      pauseTimer = 0;
-    }
+    if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= PAUSE_DURATION) { paused = false; pauseTimer = 0; } }
     return;
   }
   if (gameState !== 'playing' || !current) return;

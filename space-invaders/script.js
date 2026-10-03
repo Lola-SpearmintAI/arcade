@@ -83,7 +83,7 @@ function enemyShoot() {
 }
 
 function update() {
-  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
+  if (paused) { if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } } return; }
   if (state === 'start') {
     if (keys.space) {
       state = 'playing';
@@ -331,7 +331,11 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
   if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
   if (e.code === 'Space') keys.space = true;
-  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
+  if (e.code === 'KeyQ' && state === 'playing') {
+  if (!paused) { paused = true; pauseTimer = 0; }
+  else if (pauseTimer === 0) { pauseTimer = 1; }
+  else { paused = false; pauseTimer = 0; }
+}
 });
 
 document.addEventListener('keyup', (e) => {

@@ -201,7 +201,7 @@ function update() {
 
   if (state === 'dead') return;
 
-  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
+  if (paused) { if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } } return; }
 
   movePaddle();
 
@@ -303,7 +303,11 @@ document.addEventListener('keydown', (e) => {
       ball.active = true;
     }
   }
-  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
+  if (e.code === 'KeyQ' && state === 'playing') {
+  if (!paused) { paused = true; pauseTimer = 0; }
+  else if (pauseTimer === 0) { pauseTimer = 1; }
+  else { paused = false; pauseTimer = 0; }
+}
 });
 
 document.addEventListener('keyup', (e) => {

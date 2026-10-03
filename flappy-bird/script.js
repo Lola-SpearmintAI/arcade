@@ -159,7 +159,7 @@ function drawGameOver() {
 }
 
 function update() {
-  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
+  if (paused) { if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } } return; }
   frameCount++;
   groundX += PIPE_SPEED;
 
@@ -277,7 +277,11 @@ document.addEventListener('keydown', (e) => {
       reset();
     }
   }
-  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
+  if (e.code === 'KeyQ' && state === 'playing') {
+  if (!paused) { paused = true; pauseTimer = 0; }
+  else if (pauseTimer === 0) { pauseTimer = 1; }
+  else { paused = false; pauseTimer = 0; }
+}
 });
 
 function loop() {
