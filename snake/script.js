@@ -24,7 +24,7 @@ const COLORS = {
   overlay: 'rgba(255,255,255,0.85)',
 };
 
-let snake, food, direction, nextDirection, score, state, tickSpeed, lastTick, frameCount;
+let snake, food, direction, nextDirection, score, state, tickSpeed, lastTick, frameCount, paused, pauseTimer;
 
 function getGrid() {
   return { cols: Math.floor(W / CELL), rows: Math.floor(H / CELL) };
@@ -46,6 +46,8 @@ function reset() {
   tickSpeed = 140;
   lastTick = 0;
   frameCount = 0;
+  paused = false;
+  pauseTimer = 0;
   spawnFood();
 }
 reset();
@@ -156,6 +158,21 @@ function draw() {
   if (state === 'dead') {
     drawGameOver();
   }
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', W / 2, H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', W / 2, H * 0.57);
+  }
 }
 
 function gameTick() {
@@ -191,7 +208,11 @@ function gameTick() {
 }
 
 function update(timestamp) {
-  if (state === 'playing' && timestamp - lastTick >= tickSpeed) {
+  if (paused) {
+    pauseTimer++;
+    if (pauseTimer >= 180) { paused = false; pauseTimer = 0; }
+  }
+  if (state === 'playing' && !paused && timestamp - lastTick >= tickSpeed) {
     gameTick();
     lastTick = timestamp;
   }
@@ -211,6 +232,7 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
+  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
   if (state !== 'playing') return;
 
   switch (e.code) {

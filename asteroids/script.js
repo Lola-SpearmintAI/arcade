@@ -25,7 +25,7 @@ for (let i = 0; i < 150; i++) {
   stars.push({ x: Math.random() * 3000, y: Math.random() * 3000, s: Math.random() * 2 + 0.3, bright: Math.random() });
 }
 
-let ship, bullets, asteroids, particles, flares, score, lives, state, frameCount, spawnTimer, flareCooldown;
+let ship, bullets, asteroids, particles, flares, score, lives, state, frameCount, spawnTimer, flareCooldown, paused, pauseTimer;
 
 function newShip() {
   return { x: W / 2, y: H / 2, vx: 0, vy: 0, invincible: 0, alive: true };
@@ -43,6 +43,8 @@ function reset() {
   frameCount = 0;
   spawnTimer = 0;
   flareCooldown = 0;
+  paused = false;
+  pauseTimer = 0;
 }
 reset();
 
@@ -164,6 +166,8 @@ function update() {
 
   if (state === 'start') return;
   if (state === 'dead') return;
+
+  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
 
   // Keyboard
   if (keys.left) ship.vx -= SHIP_THRUST;
@@ -421,6 +425,21 @@ function draw() {
     ctx.font = '18px Courier New';
     ctx.fillText('SPACE to restart', W / 2, H * 0.55);
   }
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', W / 2, H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', W / 2, H * 0.57);
+  }
 }
 
 const keys = { left: false, right: false, up: false, down: false, shoot: false, shift: false };
@@ -441,6 +460,7 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowRight') keys.right = true;
   if (e.code === 'ArrowUp') keys.up = true;
   if (e.code === 'ArrowDown') keys.down = true;
+  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
 });
 
 document.addEventListener('keyup', (e) => {

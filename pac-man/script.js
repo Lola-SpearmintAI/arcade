@@ -41,7 +41,7 @@ const GHOST_SCORE = 200;
 const POWER_PELLET_DURATION = 420; // 7 seconds at 60fps
 const GHOST_RETURN_TIME = 90; // 1.5 seconds at box
 
-let maze, pac, ghosts, pellets, score, lives, state, frameCount, powerPelletTimer, lastPelletCount, deadTimer;
+let maze, pac, ghosts, pellets, score, lives, state, frameCount, powerPelletTimer, lastPelletCount, deadTimer, paused, pauseTimer;
 let startDelay = 0;
 
 function init() {
@@ -64,6 +64,8 @@ function init() {
   deadTimer = 0;
   powerPelletTimer = 0;
   startDelay = 0;
+  paused = false;
+  pauseTimer = 0;
   buildPellets();
   lastPelletCount = countPellets();
 }
@@ -263,6 +265,7 @@ function checkCollisions() {
 }
 
 function update() {
+  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
   frameCount++;
   if (powerPelletTimer > 0) powerPelletTimer--;
 
@@ -458,6 +461,21 @@ function draw() {
   ctx.fillText('SCORE: ' + score, W / 2, 16);
   ctx.textAlign = 'right';
   ctx.fillText('LIVES: ' + lives, W - 8, 16);
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', W / 2, H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', W / 2, H * 0.57);
+  }
 }
 
 const keys = { left: false, right: false, up: false, down: false, space: false };
@@ -473,6 +491,7 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowRight') keys.right = true;
   if (e.code === 'ArrowUp') keys.up = true;
   if (e.code === 'ArrowDown') keys.down = true;
+  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
 });
 
 document.addEventListener('keyup', (e) => {

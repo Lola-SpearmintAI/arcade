@@ -32,7 +32,7 @@ const COLORS = {
   life: '#e23b3b',
 };
 
-let paddle, ball, bricks, score, lives, state, mouseX, keys;
+let paddle, ball, bricks, score, lives, state, mouseX, keys, paused, pauseTimer;
 
 function reset() {
   paddle = { x: W / 2 - PADDLE_W / 2, y: H - 50, w: PADDLE_W, h: 12 };
@@ -53,6 +53,8 @@ function reset() {
   state = 'start';
   mouseX = W / 2;
   keys = {};
+  paused = false;
+  pauseTimer = 0;
 }
 reset();
 
@@ -171,6 +173,21 @@ function draw() {
     ctx.textAlign = 'center';
     ctx.fillText('PRESS SPACE TO LAUNCH', W / 2, H * 0.65);
   }
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', W / 2, H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', W / 2, H * 0.57);
+  }
 }
 
 function movePaddle() {
@@ -183,6 +200,8 @@ function update() {
   if (state === 'start') return;
 
   if (state === 'dead') return;
+
+  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
 
   movePaddle();
 
@@ -284,6 +303,7 @@ document.addEventListener('keydown', (e) => {
       ball.active = true;
     }
   }
+  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
 });
 
 document.addEventListener('keyup', (e) => {

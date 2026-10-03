@@ -24,7 +24,7 @@ var PLAY_H = H - GROUND_H;
 
 function recalc() { PLAY_H = H - GROUND_H; }
 
-let bird, pipes, score, state, frameCount, groundX;
+let bird, pipes, score, state, frameCount, groundX, paused, pauseTimer;
 let speedLines = [];
 
 function reset() {
@@ -34,6 +34,8 @@ function reset() {
   state = 'start';
   frameCount = 0;
   groundX = 0;
+  paused = false;
+  pauseTimer = 0;
 }
 reset();
 
@@ -157,6 +159,7 @@ function drawGameOver() {
 }
 
 function update() {
+  if (paused) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } return; }
   frameCount++;
   groundX += PIPE_SPEED;
 
@@ -245,6 +248,21 @@ function draw() {
   if (state === 'dead') {
     drawGameOver();
   }
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', W / 2, H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', W / 2, H * 0.57);
+  }
 }
 
 document.addEventListener('keydown', (e) => {
@@ -259,6 +277,7 @@ document.addEventListener('keydown', (e) => {
       reset();
     }
   }
+  if (e.code === 'KeyQ' && state === 'playing') { paused = !paused; pauseTimer = 0; }
 });
 
 function loop() {
