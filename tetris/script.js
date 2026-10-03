@@ -12,6 +12,8 @@ const BOARD_X = 200;
 const BOARD_Y = 50;
 const SIDE_X = 560;
 
+const PAUSE_DURATION = 180; // 3 seconds at 60fps
+
 const COLORS = {
   I: '#00e5e5',
   O: '#ffe600',
@@ -36,7 +38,7 @@ const PIECES = [
   { name: 'L', color: COLORS.L, matrix: [[0,0,1],[1,1,1],[0,0,0]] },
 ];
 
-let board, current, nextType, score, lines, level, gameState, lastTime, dropTimer, bag;
+let board, current, nextType, score, lines, level, gameState, lastTime, dropTimer, bag, paused, pauseTimer;
 let clearAnimRows, clearAnimTimer, moveTimer;
 const MOVE_INTERVAL = 7;
 const CLEAR_ANIM_FRAMES = 18;
@@ -51,6 +53,8 @@ function init() {
   clearAnimRows = [];
   clearAnimTimer = 0;
   moveTimer = 0;
+  paused = false;
+  pauseTimer = 0;
   lastTime = 0;
   dropTimer = 0;
   current = null;
@@ -214,6 +218,11 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowDown' || e.code === 'KeyS') keys.down = true;
   if (e.code === 'ArrowUp' || e.code === 'KeyW') rotatePiece();
   if (e.code === 'Space') hardDrop();
+  if (e.code === 'KeyQ' && gameState === 'playing') {
+    if (!paused) { paused = true; pauseTimer = 0; }
+    else if (pauseTimer === 0) { pauseTimer = 1; }
+    else { paused = false; pauseTimer = 0; }
+  }
 });
 
 document.addEventListener('keyup', (e) => {
@@ -226,6 +235,10 @@ function update(delta) {
   if (clearAnimTimer > 0) {
     clearAnimTimer--;
     if (clearAnimTimer <= 0) finishClear();
+    return;
+  }
+  if (paused) {
+    if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= PAUSE_DURATION) { paused = false; pauseTimer = 0; } }
     return;
   }
   if (gameState !== 'playing' || !current) return;
@@ -356,6 +369,21 @@ function draw() {
   ctx.fillText('LINES', SIDE_X, yPos);
   ctx.font = 'bold 18px Courier New';
   ctx.fillText(lines, SIDE_X, yPos + 22);
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, GAME_W, GAME_H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', GAME_W / 2, GAME_H * 0.38);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', GAME_W / 2, GAME_H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', GAME_W / 2, GAME_H * 0.57);
+  }
 
   if (gameState === 'start') {
     ctx.fillStyle = '#2563eb';

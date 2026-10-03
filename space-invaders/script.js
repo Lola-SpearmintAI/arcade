@@ -34,7 +34,7 @@ const ENEMY_SHOOT_CHANCE = 0.001;
 
 const INITIAL_LIVES = 3;
 
-let player, enemies, playerBullets, enemyBullets, score, lives, state, frameCount, enemyDir, enemySpeed, bulletCooldown, deadTimer;
+let player, enemies, playerBullets, enemyBullets, score, lives, state, frameCount, enemyDir, enemySpeed, bulletCooldown, deadTimer, paused, pauseTimer;
 
 function init() {
   enemies = [];
@@ -61,6 +61,8 @@ function init() {
   enemySpeed = ENEMY_BASE_SPEED;
   bulletCooldown = 0;
   deadTimer = 0;
+  paused = false;
+  pauseTimer = 0;
 }
 
 function playerShoot() {
@@ -81,6 +83,7 @@ function enemyShoot() {
 }
 
 function update() {
+  if (paused) { if (pauseTimer > 0) { pauseTimer++; if (pauseTimer >= 180) { paused = false; pauseTimer = 0; } } return; }
   if (state === 'start') {
     if (keys.space) {
       state = 'playing';
@@ -304,6 +307,21 @@ function draw() {
   ctx.fillText('SCORE: ' + score, 12, 24);
   ctx.textAlign = 'right';
   ctx.fillText('LIVES: ' + lives, GAME_W - 12, 24);
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(240,244,248,0.9)';
+    ctx.fillRect(0, 0, GAME_W, GAME_H);
+    ctx.fillStyle = '#2563eb';
+    ctx.font = 'bold 42px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', GAME_W / 2, GAME_H * 0.4);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '18px Courier New';
+    ctx.fillText('Resuming in ' + (3 - Math.floor(pauseTimer / 60)) + 's...', GAME_W / 2, GAME_H * 0.5);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '14px Courier New';
+    ctx.fillText('Press Q to resume early', GAME_W / 2, GAME_H * 0.57);
+  }
 }
 
 const keys = { left: false, right: false, a: false, d: false, space: false };
@@ -313,6 +331,11 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
   if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
   if (e.code === 'Space') keys.space = true;
+  if (e.code === 'KeyQ' && state === 'playing') {
+  if (!paused) { paused = true; pauseTimer = 0; }
+  else if (pauseTimer === 0) { pauseTimer = 1; }
+  else { paused = false; pauseTimer = 0; }
+}
 });
 
 document.addEventListener('keyup', (e) => {
