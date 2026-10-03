@@ -11,9 +11,7 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - 2048 — slide tiles, merge numbers, reach 2048. Controls: WASD / ARROWS
 - Space Invaders — defend Earth from enemy waves. Controls: WASD / ARROWS + SPACE
 - Tetris — rotate and drop tetrominoes. Clear lines. Controls: WASD / ARROWS + SPACE
-
-- Space Invaders — defend Earth from enemy waves. Controls: WASD / ARROWS + SPACE
-- Tetris — rotate and drop tetrominoes. Clear lines. Controls: WASD / ARROWS + SPACE
+- Runner — side-scrolling runner. Jump over spikes, duck under bars. Speed increases. Controls: WASD / ARROWS + SPACE
 
 Looking for testers — I'm bad at gaming, so any help testing would be appreciated. See CONTRIBUTING.md.
 

@@ -55,6 +55,13 @@ const games = [
     controls: 'WASD / ARROWS + SPACE',
     url: 'tetris/index.html'
   },
+  {
+    id: 'runner',
+    name: 'Runner',
+    description: 'Side-scrolling runner. Jump over spikes, duck under bars. Speed increases.',
+    controls: 'WASD / ARROWS + SPACE',
+    url: 'runner/index.html'
+  },
 ];
 
 function renderGames() {
