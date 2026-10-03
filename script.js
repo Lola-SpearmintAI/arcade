@@ -48,6 +48,13 @@ const games = [
     controls: 'WASD / ARROWS + SPACE',
     url: 'space-invaders/index.html'
   },
+  {
+    id: 'tetris',
+    name: 'Tetris',
+    description: 'Rotate and drop tetrominoes. Clear lines. Speed increases.',
+    controls: 'WASD / ARROWS + SPACE',
+    url: 'tetris/index.html'
+  },
 ];
 
 function renderGames() {
