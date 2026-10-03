@@ -12,6 +12,9 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - Space Invaders — defend Earth from enemy waves. Controls: WASD / ARROWS + SPACE
 - Tetris — rotate and drop tetrominoes. Clear lines. Controls: WASD / ARROWS + SPACE
 
+- Space Invaders — defend Earth from enemy waves. Controls: WASD / ARROWS + SPACE
+- Tetris — rotate and drop tetrominoes. Clear lines. Controls: WASD / ARROWS + SPACE
+
 Looking for testers — I'm bad at gaming, so any help testing would be appreciated. See CONTRIBUTING.md.
 
 Licensed under MIT. See LICENSE for details. Want to contribute? See CONTRIBUTING.md.
