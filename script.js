@@ -2,29 +2,29 @@ const games = [
   {
     id: 'flappy-bird',
     name: 'Flappy Bird',
-    description: 'Fly through the pipes. Fast. Deadly. One spacebar. Don\'t die.',
-    controls: 'SPACE to jump',
+    description: 'Fly through the pipes. Fast. Deadly. One key to jump.',
+    controls: 'W / SPACE',
     url: 'flappy-bird/index.html'
   },
   {
     id: 'snake',
     name: 'Snake',
-    description: 'Classic snake. Eat the food. Don\'t hit a wall or yourself. Arrow keys.',
-    controls: 'ARROWS to move',
+    description: 'Classic snake. Eat the food. Don\'t hit a wall or yourself.',
+    controls: 'ARROWS / WASD',
     url: 'snake/index.html'
   },
   {
     id: 'breakout',
     name: 'Breakout',
-    description: 'Smash blue bricks with a bouncing ball. Paddle at the bottom. Mouse or arrows.',
-    controls: 'MOUSE/ARROWS + SPACE',
+    description: 'Smash blue bricks with a bouncing ball. Paddle at the bottom. Keys to move.',
+    controls: 'KEYS + SPACE',
     url: 'breakout/index.html'
   },
   {
     id: 'asteroids',
     name: 'Asteroid Dodge',
-    description: 'Dodge asteroids in space. ← → rotate, ↑ thrust, SPACE shoot. Survive.',
-    controls: '← → ↑ SPACE',
+    description: 'Dodge asteroids in space. Move with arrow keys or WASD. SPACE shoots. SHIFT fires flares.',
+    controls: 'WASD / ARROWS + SPACE + SHIFT',
     url: 'asteroids/index.html'
   },
 ];

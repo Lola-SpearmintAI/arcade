@@ -165,6 +165,7 @@ function update() {
   if (state === 'start') return;
   if (state === 'dead') return;
 
+  // Keyboard
   if (keys.left) ship.vx -= SHIP_THRUST;
   if (keys.right) ship.vx += SHIP_THRUST;
   if (keys.up) ship.vy -= SHIP_THRUST;
@@ -211,7 +212,7 @@ function update() {
     if (f.life <= 0) flares.splice(i, 1);
   }
 
-  // Spawn asteroids — always from top/sides, never from behind
+  // Spawn asteroids
   spawnTimer--;
   if (spawnTimer <= 0 && asteroids.length < 20) {
     const roll = Math.random();
@@ -355,7 +356,7 @@ function draw() {
     ctx.fillText('SPACE to start', W / 2, H * 0.45);
     ctx.fillStyle = '#fff';
     ctx.font = '14px Courier New';
-    ctx.fillText('← → ↑ ↓ to move  SPACE to shoot  SHIFT flares', W / 2, H * 0.55);
+    ctx.fillText('← → ↑ ↓ or WASD to move  SPACE to shoot  SHIFT for flares', W / 2, H * 0.55);
     return;
   }
 
@@ -396,23 +397,11 @@ function draw() {
       ctx.restore();
     }
 
-    // Cooldown indicator
-    if (flareCooldown > 0) {
-      const pct = flareCooldown / FLARE_COOLDOWN;
-      ctx.strokeStyle = 'rgba(96,165,250,' + (0.3 + pct * 0.5) + ')';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(W / 2, H - 20, 10, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.fillStyle = '#60a5fa';
-      ctx.font = '10px Courier New';
-      ctx.textAlign = 'center';
-      ctx.fillText('FLARE', W / 2, H - 35);
-    }
-
+    // HUD
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 18px Courier New';
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
     ctx.fillText('SCORE: ' + score, W / 2, 28);
     ctx.textAlign = 'right';
     ctx.fillText('LIVES: ' + lives, W - 16, 28);
@@ -444,6 +433,10 @@ document.addEventListener('keydown', (e) => {
     keys.shoot = true;
   }
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { keys.shift = true; return; }
+  if (e.code === 'KeyW') { keys.up = true; return; }
+  if (e.code === 'KeyS') { keys.down = true; return; }
+  if (e.code === 'KeyA') { keys.left = true; return; }
+  if (e.code === 'KeyD') { keys.right = true; return; }
   if (e.code === 'ArrowLeft') keys.left = true;
   if (e.code === 'ArrowRight') keys.right = true;
   if (e.code === 'ArrowUp') keys.up = true;
@@ -456,13 +449,10 @@ document.addEventListener('keyup', (e) => {
   if (e.code === 'ArrowUp') keys.up = false;
   if (e.code === 'ArrowDown') keys.down = false;
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.shift = false;
-});
-
-canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  if (state === 'start') { state = 'playing'; return; }
-  if (state === 'dead') { reset(); return; }
-  shoot();
+  if (e.code === 'KeyW') keys.up = false;
+  if (e.code === 'KeyS') keys.down = false;
+  if (e.code === 'KeyA') keys.left = false;
+  if (e.code === 'KeyD') keys.right = false;
 });
 
 function loop() {

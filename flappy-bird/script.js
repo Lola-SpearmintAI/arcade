@@ -248,7 +248,7 @@ function draw() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
+  if (e.code === 'Space' || e.code === 'KeyW') {
     e.preventDefault();
     if (state === 'start') {
       state = 'playing';
@@ -258,18 +258,6 @@ document.addEventListener('keydown', (e) => {
     } else if (state === 'dead') {
       reset();
     }
-  }
-});
-
-canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  if (state === 'start') {
-    state = 'playing';
-    bird.vy = JUMP;
-  } else if (state === 'playing') {
-    bird.vy = JUMP;
-  } else if (state === 'dead') {
-    reset();
   }
 });
 

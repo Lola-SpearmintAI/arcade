@@ -226,6 +226,18 @@ document.addEventListener('keydown', (e) => {
     case 'ArrowRight':
       if (direction.x !== -1) nextDirection = { x: 1, y: 0 };
       break;
+    case 'KeyW':
+      if (direction.y !== 1) nextDirection = { x: 0, y: -1 };
+      break;
+    case 'KeyS':
+      if (direction.y !== -1) nextDirection = { x: 0, y: 1 };
+      break;
+    case 'KeyA':
+      if (direction.x !== 1) nextDirection = { x: -1, y: 0 };
+      break;
+    case 'KeyD':
+      if (direction.x !== -1) nextDirection = { x: 1, y: 0 };
+      break;
   }
 });
 

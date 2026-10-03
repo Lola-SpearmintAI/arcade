@@ -174,8 +174,8 @@ function draw() {
 }
 
 function movePaddle() {
-  if (keys['ArrowLeft'] || keys['a']) paddle.x -= 12;
-  if (keys['ArrowRight'] || keys['d']) paddle.x += 12;
+  if (keys['ArrowLeft'] || keys['KeyA']) paddle.x -= 12;
+  if (keys['ArrowRight'] || keys['KeyD']) paddle.x += 12;
   paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
 }
 
