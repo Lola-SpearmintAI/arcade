@@ -59,7 +59,7 @@ const games = [
     id: 'runner',
     name: 'Runner',
     description: 'Side-scrolling runner. Jump over spikes, duck under bars. Speed increases.',
-    controls: 'WASD / ARROWS + SPACE',
+    controls: 'SPACE to jump, SHIFT to duck',
     url: 'runner/index.html'
   },
 ];
