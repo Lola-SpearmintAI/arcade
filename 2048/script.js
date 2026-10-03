@@ -10,15 +10,13 @@ const TILE_COLORS = {
   512: '#312e81', 1024: '#1e1b4b', 2048: '#ffd700',
 };
 
-let grid, score, best, cellEls, gameOver, won, paused, pauseTimer;
+let grid, score, best, cellEls, gameOver, won;
 
 function init() {
   grid = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
   score = 0;
   gameOver = false;
   won = false;
-  paused = false;
-  pauseTimer = 0;
   best = parseInt(localStorage.getItem('best2048') || '0');
   spawnCell(); spawnCell(); spawnCell(); spawnCell();
   render();
@@ -130,44 +128,12 @@ function update() {
 
 function handleMove(dir) {
   if (gameOver) return;
-  if (paused) return;
   const changed = moveGrid(dir);
   if (changed) {
     spawnCell();
     render();
     update();
   }
-}
-
-function createPauseOverlay() {
-  const existing = document.getElementById('pause-overlay');
-  if (existing) existing.remove();
-  const overlay = document.createElement('div');
-  overlay.id = 'pause-overlay';
-  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(240,244,248,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;font-family:"Courier New",monospace;';
-  overlay.innerHTML = '<div style="font-size:42px;font-weight:700;color:#2563eb;">PAUSED</div><div style="font-size:18px;color:#1e293b;margin-top:8px;">Resuming in 3s...</div><div style="font-size:14px;color:#64748b;margin-top:4px;">Press Q to resume early</div>';
-  document.querySelector('.game-wrap').appendChild(overlay);
-}
-
-function removePauseOverlay() {
-  const overlay = document.getElementById('pause-overlay');
-  if (overlay) overlay.remove();
-}
-
-let pauseInterval = null;
-function startPauseTimer() {
-  if (pauseInterval) clearInterval(pauseInterval);
-  let secs = 3;
-  pauseInterval = setInterval(() => {
-    secs--;
-    const overlay = document.getElementById('pause-overlay');
-    if (overlay) overlay.querySelector('div:nth-child(2)').textContent = `Resuming in ${secs}s...`;
-    if (secs <= 0) {
-      clearInterval(pauseInterval);
-      pauseInterval = null;
-      if (paused) { paused = false; pauseTimer = 0; removePauseOverlay(); }
-    }
-  }, 1000);
 }
 
 const keys = { left: false, right: false, up: false, down: false };
@@ -178,11 +144,6 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'KeyD' || e.code === 'ArrowRight') handleMove('right');
   if (e.code === 'KeyW' || e.code === 'ArrowUp') handleMove('up');
   if (e.code === 'KeyS' || e.code === 'ArrowDown') handleMove('down');
-  if (e.code === 'KeyQ' && !gameOver && !won) {
-    paused = !paused;
-    if (paused) { createPauseOverlay(); startPauseTimer(); }
-    else { removePauseOverlay(); if (pauseInterval) clearInterval(pauseInterval); }
-  }
 });
 
 init();
