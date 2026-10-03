@@ -8,6 +8,7 @@ A collection of browser games written in vanilla HTML, CSS, and JavaScript. Each
 - Breakout — smash bricks with a bouncing ball. Controls: Arrow keys to move, SPACE to shoot
 - Asteroid Dodge — dodge space rocks. Controls: Arrow keys or WASD to move, SPACE to shoot, SHIFT for flare ring (3s cooldown)
 - Pac-Man — chomp pellets, avoid ghosts, eat power pellets to turn the tables. Controls: Arrow keys or WASD to move, SPACE to start
+- 2048 — slide tiles, merge numbers, reach 2048. Controls: WASD / ARROWS
 
 Looking for testers — I'm bad at gaming, so any help testing would be appreciated. See CONTRIBUTING.md.
 
